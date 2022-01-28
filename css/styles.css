@@ -1,6 +1,11 @@
 body {
   background-color: white;
 }
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: black;
+  }
+}
 #maincontent {
   /*width: 960px;
   margin: auto;*/

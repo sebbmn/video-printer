@@ -1,16 +1,12 @@
-let video = document.getElementById("video");
-let thumbnails = document.getElementById("thumbnails");
+const video = document.getElementById('video');
+const thumbnails = document.getElementById('thumbnails');
+
+let intViewportWidth = window.innerWidth;
+let intViewportHeight = window.innerHeight;
 
 let hueVariation = 0;
 let isPlaying = false;
 let maxTime = 0;
-
-video.addEventListener('play', function() {
-  isPlaying = true;
-});
-video.addEventListener('pause', function() {
-  isPlaying = false;
-});
 
 document.addEventListener('click', () => {
   if(isPlaying) {
@@ -18,7 +14,20 @@ document.addEventListener('click', () => {
   } else {
     video.play();
   }
-})
+});
+
+window.addEventListener('resize', () => {
+  intViewportWidth = window.innerWidth;
+  intViewportHeight = window.innerHeight;
+});
+video.addEventListener('play', function() {
+  isPlaying = true;
+});
+video.addEventListener('pause', function() {
+  isPlaying = false;
+});
+
+
 // 23fps = 1 frame every 43.478 sec
 window.setInterval(function() {
   if(isPlaying) {
