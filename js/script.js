@@ -12,6 +12,13 @@ video.addEventListener('pause', function() {
   isPlaying = false;
 });
 
+document.addEventListener('click', () => {
+  if(isPlaying) {
+    video.pause();
+  } else {
+    video.play();
+  }
+})
 // 23fps = 1 frame every 43.478 sec
 window.setInterval(function() {
   if(isPlaying) {
@@ -20,17 +27,17 @@ window.setInterval(function() {
       addThumbnail(video.currentTime);
     }
   }
-}, 44); 
+}, 250); 
 
 function addThumbnail(currentTime) {
   let thumbnailCanvas = document.createElement("canvas");
-  thumbnailCanvas.width = 48;
-  thumbnailCanvas.height = 48;
+  thumbnailCanvas.width = 96;
+  thumbnailCanvas.height = 96;
 
   let context = thumbnailCanvas.getContext("2d");
   context.filter = `hue-rotate(${hueVariation}deg)`;
-  hueVariation +=1;
-  context.drawImage(video,280,0,400,400,0,0,48,48);
+  hueVariation +=5;
+  context.drawImage(video,80,0,480,480,0,0,96,96);
   
   //dataUrl = thumbnailCanvas.toDataURL();
   //thumbnailImage = document.createElement('img');

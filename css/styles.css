@@ -2,12 +2,12 @@ body {
   background-color: white;
 }
 #maincontent {
-  width: 960px;
-  margin: auto;
+  /*width: 960px;
+  margin: auto;*/
 }
 .thumbnail{
-  width: 48px;
-  width: 48px;
+  width: 96px;
+  width: 96px;
   animation: 0.8s thumbnailEnter 1 linear; 
 }
 .thumbnail:hover {
