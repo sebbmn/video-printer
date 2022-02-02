@@ -10,7 +10,6 @@ body {
 }*/
 #maincontent {
   width: 100%;
-  height: calc(100vh - 10px);
 }
 
 #video {
@@ -21,14 +20,34 @@ body {
   padding: 0;
 }
 
-#thumbnails {
-  margin: 0;
-  padding: 0;
+#video-navigation {
+  width: 1610px;
+  padding: 5px;
+  margin: auto;
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: left;
 }
 
+#thumbnails {
+  width: 1610px;
+  padding: 5px;
+  margin: auto;
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: left;
+}
+
+#video-navigation div {
+  width: 200px;
+  height: 200px;
+  margin: 0px;
+}
 .thumbnail{
-  width: 96px;
-  width: 96px;
+  width: 100px;
+  width: 100px;
   animation: 0.8s thumbnailEnter 1 linear; 
 }
 .thumbnail:hover {
