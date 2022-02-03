@@ -40,7 +40,6 @@ window.setInterval(function() {
   if(isPlaying) {
     if(video.currentTime > maxTime) {
       frame++;
-      console.log(frame)
       maxTime = video.currentTime;
       addThumbnail(video.currentTime);
       refreshNavigationFrame(page);
@@ -88,7 +87,8 @@ function addThumbnail(currentTime) {
   thumbnailCanvas.className = "thumbnail";
 
   thumbnailCanvas.onclick = () => { 
-    video.currentTime = currentTime; 
+    video.currentTime = currentTime;
+    window.print();
   };
 
   if (frame >= 448) {
