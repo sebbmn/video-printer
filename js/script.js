@@ -5,9 +5,11 @@ const videoNavigation = document.getElementById('video-navigation');
 let intViewportWidth = window.innerWidth;
 let intViewportHeight = window.innerHeight;
 
-let hueVariation = 0;
 let isPlaying = false;
 let maxTime = 0;
+
+let page = 0;
+let frame = 0;
 
 initLayout();
 
@@ -23,9 +25,11 @@ window.addEventListener('resize', () => {
   intViewportWidth = window.innerWidth;
   intViewportHeight = window.innerHeight;
 });
+
 video.addEventListener('play', function() {
   isPlaying = true;
 });
+
 video.addEventListener('pause', function() {
   isPlaying = false;
 });
@@ -35,11 +39,14 @@ video.addEventListener('pause', function() {
 window.setInterval(function() {
   if(isPlaying) {
     if(video.currentTime > maxTime) {
+      frame++;
+      console.log(frame)
       maxTime = video.currentTime;
       addThumbnail(video.currentTime);
+      refreshNavigationFrame(page);
     }
   }
-}, 250); 
+}, 100); 
 
 function initLayout() {
   for(i=0;i<8;i++) {
@@ -50,35 +57,12 @@ function initLayout() {
   }
 }
 
-function addThumbnail(currentTime) {
-  const thumbnailCanvas = document.createElement("canvas");
+function refreshNavigationFrame(page) {
+  const navigationFrame = document.getElementById(`navigation-frame-${page}`);
   const navigationFrameCanvas = document.createElement("canvas");
-
-  const navigationFrame = document.getElementById('navigation-frame-1');
-
-  thumbnailCanvas.width = 50;
-  thumbnailCanvas.height = 50;
 
   navigationFrameCanvas.width = 200;
   navigationFrameCanvas.height = 200;
-
-  /* Thumbnail canvas */
-  const thumbnailContext = thumbnailCanvas.getContext("2d");
-  thumbnailContext.filter = `hue-rotate(${hueVariation}deg)`;
-  hueVariation +=5;
-  thumbnailContext.drawImage(video,80,0,480,480,0,0,50,50);
-  
-  //dataUrl = thumbnailCanvas.toDataURL();
-  //thumbnailImage = document.createElement('img');
-  //thumbnailImage.src = dataUrl;
-  thumbnailCanvas.className = "thumbnail";
-  //thumbnailImage.id = currentTime;
-
-  thumbnailCanvas.onclick = () => { 
-    video.currentTime = currentTime; 
-  };
-
-  thumbnails.appendChild(thumbnailCanvas);
 
   /* Nav fram canvas */
   const navigationFrameContext = navigationFrameCanvas.getContext("2d");
@@ -90,5 +74,30 @@ function addThumbnail(currentTime) {
     navigationFrame.removeChild(navigationFrame.firstChild);
   }
   navigationFrame.appendChild(navigationFrameCanvas);
-  
+}
+
+function addThumbnail(currentTime) {
+  const thumbnailCanvas = document.createElement("canvas");
+
+  thumbnailCanvas.width = 200;
+  thumbnailCanvas.height = 200;
+
+  /* Thumbnail canvas */
+  const thumbnailContext = thumbnailCanvas.getContext("2d");
+  thumbnailContext.drawImage(video,80,0,480,480,0,0,200,200);
+  thumbnailCanvas.className = "thumbnail";
+
+  thumbnailCanvas.onclick = () => { 
+    video.currentTime = currentTime; 
+  };
+
+  if (frame >= 448) {
+    while (thumbnails.firstChild) {
+      thumbnails.removeChild(thumbnails.firstChild);
+    }
+    frame = 0;
+    page++;
+  }
+
+  thumbnails.appendChild(thumbnailCanvas);
 }
