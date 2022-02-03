@@ -44,21 +44,29 @@ window.setInterval(function() {
 function initLayout() {
   for(i=0;i<8;i++) {
     const newDiv = document.createElement("div");
-    newDiv.className = `video-navigation-frame-${i}`;
+    newDiv.id = `navigation-frame-${i}`;
     newDiv.style = `background-color: #${i}A${i}B${i}C`;
     videoNavigation.appendChild(newDiv);
   }
 }
 
 function addThumbnail(currentTime) {
-  let thumbnailCanvas = document.createElement("canvas");
-  thumbnailCanvas.width = 100;
-  thumbnailCanvas.height = 100;
+  const thumbnailCanvas = document.createElement("canvas");
+  const navigationFrameCanvas = document.createElement("canvas");
 
-  let context = thumbnailCanvas.getContext("2d");
-  context.filter = `hue-rotate(${hueVariation}deg)`;
+  const navigationFrame = document.getElementById('navigation-frame-1');
+
+  thumbnailCanvas.width = 50;
+  thumbnailCanvas.height = 50;
+
+  navigationFrameCanvas.width = 200;
+  navigationFrameCanvas.height = 200;
+
+  /* Thumbnail canvas */
+  const thumbnailContext = thumbnailCanvas.getContext("2d");
+  thumbnailContext.filter = `hue-rotate(${hueVariation}deg)`;
   hueVariation +=5;
-  context.drawImage(video,80,0,480,480,0,0,100,100);
+  thumbnailContext.drawImage(video,80,0,480,480,0,0,50,50);
   
   //dataUrl = thumbnailCanvas.toDataURL();
   //thumbnailImage = document.createElement('img');
@@ -71,4 +79,16 @@ function addThumbnail(currentTime) {
   };
 
   thumbnails.appendChild(thumbnailCanvas);
+
+  /* Nav fram canvas */
+  const navigationFrameContext = navigationFrameCanvas.getContext("2d");
+  navigationFrameContext.drawImage(video,80,0,480,480,0,0,200,200);
+
+  navigationFrameCanvas.className = "navigation-frame";
+
+  if(navigationFrame.firstChild) {
+    navigationFrame.removeChild(navigationFrame.firstChild);
+  }
+  navigationFrame.appendChild(navigationFrameCanvas);
+  
 }
