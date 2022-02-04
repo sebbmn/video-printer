@@ -93,7 +93,7 @@ button:hover {
 .thumbnail {
   width: 50px;
   height: 50px;
-  animation: 0.8s thumbnailEnter 1 linear; 
+  animation: 0.5s thumbnailEnter 1 linear; 
 }
 
 .thumbnail:hover {
@@ -102,20 +102,38 @@ button:hover {
   cursor:pointer;
 }
 
+/* Blinking cursor */
+#cursor {
+  width: 50px;
+  height: 50px;
+  background-color: black;
+  animation: blinking 2s infinite;;
+}
+
 /* Animations */
 @keyframes thumbnailEnter{
   0%{
-    top: 15px;
-    left: 25px;
-    position: relative;
-    transform: rotateY(-180deg);
     opacity: 0;
   }
   99% {
-    top: 0px;
-    left: 0px;
-    position: relative;
-    transform: rotateY(0deg);
     opacity: 1;
+  }
+}
+
+@keyframes blinking{
+  0%{
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

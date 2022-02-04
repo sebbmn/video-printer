@@ -1,6 +1,7 @@
 const video = document.getElementById('video');
 const thumbnails = document.getElementById('thumbnails');
 const videoNavigation = document.getElementById('video-navigation');
+const cursor = document.getElementById('cursor');
 const playPauseButton = document.createElement('button');
 
 let intViewportWidth, intViewportHeight, isPlaying, maxTime, pages, pageNumber, frame, maxFrames;
@@ -70,7 +71,7 @@ function initListeners() {
 window.setInterval(function() {
   if(isPlaying) {
     if(video.currentTime > maxTime) {
-      if (frame >= 448) {
+      if (frame >= maxFrames - 1) {
         newPage()
       }
       frame++;
@@ -94,6 +95,7 @@ function newPage() {
     oldPageItems.push(thumbnails.firstChild);
     thumbnails.removeChild(thumbnails.firstChild);
   }
+  thumbnails.append(cursor);
 
   const index = pageNumber;
   currentNavFrame.onclick = () => { 
@@ -107,7 +109,7 @@ function newPage() {
 
 function navigateToPage(index) {
   video.pause();
-  frame = 448;
+  frame = maxFrames;
   while (thumbnails.firstChild) {
     thumbnails.removeChild(thumbnails.firstChild);
   }
@@ -152,5 +154,5 @@ function addThumbnail(currentTime) {
     window.print();
   };
 
-  thumbnails.appendChild(thumbnailCanvas);
+  thumbnails.insertBefore(thumbnailCanvas, cursor);
 }
