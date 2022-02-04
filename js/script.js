@@ -1,6 +1,9 @@
 const video = document.getElementById('video');
 const thumbnails = document.getElementById('thumbnails');
 const videoNavigation = document.getElementById('video-navigation');
+const playPauseButton = document.createElement('button');
+playPauseButton.className = 'button';
+
 
 let intViewportWidth = window.innerWidth;
 let intViewportHeight = window.innerHeight;
@@ -13,15 +16,27 @@ let pageNumber = 0;
 let frame = 0;
 let maxFrames = 448;
 
-initLayout();
+startupPage();
 
-document.addEventListener('click', () => {
-  if(isPlaying) {
-    video.pause();
-  } else {
-    video.play();
-  }
-});
+function startupPage() {
+  initLayout();
+  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber + 1}`);
+
+  playPauseButton.addEventListener('click', () => {
+    playPauseButton.classList.toggle('paused');
+
+    if(isPlaying) {
+      video.pause();
+    } else {
+      video.play();
+    }
+  });
+
+  navigationFrame.appendChild(playPauseButton);
+}
+
+
+
 
 window.addEventListener('resize', () => {
   intViewportWidth = window.innerWidth;
@@ -56,22 +71,29 @@ function initLayout() {
   for(i=0;i<8;i++) {
     const newDiv = document.createElement("div");
     newDiv.id = `navigation-frame-${i}`;
-    newDiv.style = `background-color: #${i}A${i}B${i}C`;
+    newDiv.className = 'navigation-frame';
+    newDiv.style = `background: #${i}A${i}B${i}C`;
     videoNavigation.appendChild(newDiv);
   }
 }
 
 function newPage() {
-  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber}`);
+  const currentNavFrame = document.getElementById(`navigation-frame-${pageNumber}`);
+  const newNavFrame = document.getElementById(`navigation-frame-${pageNumber + 1}`);
+  const nextNavFrame = document.getElementById(`navigation-frame-${pageNumber + 2}`);
   const oldPageItems = [];
+
+  newNavFrame.removeChild(newNavFrame.firstChild);
+  nextNavFrame.appendChild(playPauseButton);
 
   while (thumbnails.firstChild) {
     oldPageItems.push(thumbnails.firstChild);
     thumbnails.removeChild(thumbnails.firstChild);
   }
 
-  navigationFrame.onclick = () => { 
-    navigateToPage(pageNumber);
+  const index = pageNumber;
+  currentNavFrame.onclick = () => { 
+    navigateToPage(index);
   };
 
   pages = [...pages, oldPageItems];
@@ -80,17 +102,15 @@ function newPage() {
 }
 
 function navigateToPage(index) {
-  /*video.pause();
-
+  video.pause();
+  frame = 448;
   while (thumbnails.firstChild) {
     thumbnails.removeChild(thumbnails.firstChild);
   }
 
   pages[index].forEach(element => {
     thumbnails.appendChild(element);
-  });*/
-  console.log(pages[index], pages[0], index);
-  //thumbnails = pages[index];
+  });
 }
 
 /* Nav frame canvas */
@@ -104,7 +124,7 @@ function refreshNavigationFrame() {
   const navigationFrameContext = navigationFrameCanvas.getContext("2d");
   navigationFrameContext.drawImage(video,80,0,480,480,0,0,200,200);
 
-  navigationFrameCanvas.className = "navigation-frame";
+  navigationFrameCanvas.className = "navigation-frame-canvas";
 
   if(navigationFrame.firstChild) {
     navigationFrame.removeChild(navigationFrame.firstChild);
