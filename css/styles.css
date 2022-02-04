@@ -12,25 +12,7 @@ body {
   width: 100%;
 }
 
-#video {
-  visibility: hidden;
-  width: 0;
-  height: 0;
-  margin: 0;
-  padding: 0;
-}
-
 #video-navigation {
-  width: 1610px;
-  padding: 5px;
-  margin: auto;
-  display:flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: left;
-}
-
-#thumbnails {
   width: 1610px;
   padding: 5px;
   margin: auto;
@@ -46,18 +28,25 @@ body {
   margin: 0px;
 }
 
-.thumbnail{
-  width: 50px;
-  height: 50px;
-  animation: 0.8s thumbnailEnter 1 linear; 
+#thumbnails {
+  width: 1610px;
+  padding: 5px;
+  margin: auto;
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: left;
 }
 
-.thumbnail:hover {
-  transform: scale(4,4);
-  box-shadow: 10px 10px 91px 0px #222222;
-  cursor:pointer;
+#video {
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
 }
 
+/* Video navigation */
 .navigation-frame {
   display: flex;
   justify-content: center;
@@ -72,22 +61,6 @@ body {
 
 .navigation-frame-canvas:hover {
   transform: scale(2,2) translate(25%, 25%);
-}
-@keyframes thumbnailEnter{
-  0%{
-    top: 15px;
-    left: 25px;
-    position: relative;
-    transform: rotateY(-180deg);
-    opacity: 0;
-  }
-  99% {
-    top: 0px;
-    left: 0px;
-    position: relative;
-    transform: rotateY(0deg);
-    opacity: 1;
-  }
 }
 
 /* Play/Pause button */
@@ -113,4 +86,35 @@ button.paused {
 
 button:hover {
   border-color: transparent transparent transparent #afafaf;
+}
+
+/* Thumbnails */
+.thumbnail {
+  width: 50px;
+  height: 50px;
+  animation: 0.8s thumbnailEnter 1 linear; 
+}
+
+.thumbnail:hover {
+  transform: scale(4,4);
+  box-shadow: 10px 10px 91px 0px #222222;
+  cursor:pointer;
+}
+
+/* Animations */
+@keyframes thumbnailEnter{
+  0%{
+    top: 15px;
+    left: 25px;
+    position: relative;
+    transform: rotateY(-180deg);
+    opacity: 0;
+  }
+  99% {
+    top: 0px;
+    left: 0px;
+    position: relative;
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
 }
