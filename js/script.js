@@ -8,8 +8,10 @@ let intViewportHeight = window.innerHeight;
 let isPlaying = false;
 let maxTime = 0;
 
-let page = 0;
+let pages = [];
+let pageNumber = 0;
 let frame = 0;
+let maxFrames = 448;
 
 initLayout();
 
@@ -39,10 +41,13 @@ video.addEventListener('pause', function() {
 window.setInterval(function() {
   if(isPlaying) {
     if(video.currentTime > maxTime) {
+      if (frame >= 448) {
+        newPage()
+      }
       frame++;
       maxTime = video.currentTime;
       addThumbnail(video.currentTime);
-      refreshNavigationFrame(page);
+      refreshNavigationFrame(pageNumber);
     }
   }
 }, 100); 
@@ -56,14 +61,46 @@ function initLayout() {
   }
 }
 
-function refreshNavigationFrame(page) {
-  const navigationFrame = document.getElementById(`navigation-frame-${page}`);
+function newPage() {
+  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber}`);
+  const oldPageItems = [];
+
+  while (thumbnails.firstChild) {
+    oldPageItems.push(thumbnails.firstChild);
+    thumbnails.removeChild(thumbnails.firstChild);
+  }
+
+  navigationFrame.onclick = () => { 
+    navigateToPage(pageNumber);
+  };
+
+  pages = [...pages, oldPageItems];
+  frame = 0;
+  pageNumber++;
+}
+
+function navigateToPage(index) {
+  /*video.pause();
+
+  while (thumbnails.firstChild) {
+    thumbnails.removeChild(thumbnails.firstChild);
+  }
+
+  pages[index].forEach(element => {
+    thumbnails.appendChild(element);
+  });*/
+  console.log(pages[index], pages[0], index);
+  //thumbnails = pages[index];
+}
+
+/* Nav frame canvas */
+function refreshNavigationFrame() {
+  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber}`);
   const navigationFrameCanvas = document.createElement("canvas");
 
   navigationFrameCanvas.width = 200;
   navigationFrameCanvas.height = 200;
 
-  /* Nav fram canvas */
   const navigationFrameContext = navigationFrameCanvas.getContext("2d");
   navigationFrameContext.drawImage(video,80,0,480,480,0,0,200,200);
 
@@ -75,13 +112,13 @@ function refreshNavigationFrame(page) {
   navigationFrame.appendChild(navigationFrameCanvas);
 }
 
+/* Thumbnail canvas */
 function addThumbnail(currentTime) {
   const thumbnailCanvas = document.createElement("canvas");
 
   thumbnailCanvas.width = 200;
   thumbnailCanvas.height = 200;
 
-  /* Thumbnail canvas */
   const thumbnailContext = thumbnailCanvas.getContext("2d");
   thumbnailContext.drawImage(video,80,0,480,480,0,0,200,200);
   thumbnailCanvas.className = "thumbnail";
@@ -90,14 +127,6 @@ function addThumbnail(currentTime) {
     video.currentTime = currentTime;
     window.print();
   };
-
-  if (frame >= 448) {
-    while (thumbnails.firstChild) {
-      thumbnails.removeChild(thumbnails.firstChild);
-    }
-    frame = 0;
-    page++;
-  }
 
   thumbnails.appendChild(thumbnailCanvas);
 }
