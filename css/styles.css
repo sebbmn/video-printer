@@ -60,7 +60,8 @@ body {
 }
 
 .navigation-frame-canvas:hover {
-  transform: scale(2,2) translate(25%, 25%);
+  transform: scale(1.5,1.5) translate(16.66%, 16.66%);
+  z-index: 10;
 }
 
 /* Play/Pause button */

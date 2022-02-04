@@ -2,25 +2,58 @@ const video = document.getElementById('video');
 const thumbnails = document.getElementById('thumbnails');
 const videoNavigation = document.getElementById('video-navigation');
 const playPauseButton = document.createElement('button');
-playPauseButton.className = 'button';
 
-
-let intViewportWidth = window.innerWidth;
-let intViewportHeight = window.innerHeight;
-
-let isPlaying = false;
-let maxTime = 0;
-
-let pages = [];
-let pageNumber = 0;
-let frame = 0;
-let maxFrames = 448;
+let intViewportWidth, intViewportHeight, isPlaying, maxTime, pages, pageNumber, frame, maxFrames;
 
 startupPage();
 
 function startupPage() {
+  initVariables();
   initLayout();
+  initListeners();
+}
+
+function initVariables() {
+  playPauseButton.className = 'button';
+
+  intViewportWidth = window.innerWidth;
+  intViewportHeight = window.innerHeight;
+
+  isPlaying = false;
+  maxTime = 0;
+
+  pages = [];
+  pageNumber = 0;
+  frame = 0;
+  maxFrames = 448;
+}
+
+function initLayout() {
+  for(i=0;i<8;i++) {
+    const newDiv = document.createElement("div");
+    newDiv.id = `navigation-frame-${i}`;
+    newDiv.className = 'navigation-frame';
+    newDiv.style = `background: #${i}A${i}B${i}C`;
+    videoNavigation.appendChild(newDiv);
+  }
+
   const navigationFrame = document.getElementById(`navigation-frame-${pageNumber + 1}`);
+  navigationFrame.appendChild(playPauseButton);
+}
+
+function initListeners() {
+  window.addEventListener('resize', () => {
+    intViewportWidth = window.innerWidth;
+    intViewportHeight = window.innerHeight;
+  });
+  
+  video.addEventListener('play', function() {
+    isPlaying = true;
+  });
+  
+  video.addEventListener('pause', function() {
+    isPlaying = false;
+  });
 
   playPauseButton.addEventListener('click', () => {
     playPauseButton.classList.toggle('paused');
@@ -31,26 +64,7 @@ function startupPage() {
       video.play();
     }
   });
-
-  navigationFrame.appendChild(playPauseButton);
 }
-
-
-
-
-window.addEventListener('resize', () => {
-  intViewportWidth = window.innerWidth;
-  intViewportHeight = window.innerHeight;
-});
-
-video.addEventListener('play', function() {
-  isPlaying = true;
-});
-
-video.addEventListener('pause', function() {
-  isPlaying = false;
-});
-
 
 // 23fps = 1 frame every 43.478 sec
 window.setInterval(function() {
@@ -66,16 +80,6 @@ window.setInterval(function() {
     }
   }
 }, 100); 
-
-function initLayout() {
-  for(i=0;i<8;i++) {
-    const newDiv = document.createElement("div");
-    newDiv.id = `navigation-frame-${i}`;
-    newDiv.className = 'navigation-frame';
-    newDiv.style = `background: #${i}A${i}B${i}C`;
-    videoNavigation.appendChild(newDiv);
-  }
-}
 
 function newPage() {
   const currentNavFrame = document.getElementById(`navigation-frame-${pageNumber}`);
