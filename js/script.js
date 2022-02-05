@@ -4,7 +4,7 @@ const videoNavigation = document.getElementById('video-navigation');
 const cursor = document.getElementById('cursor');
 const playPauseButton = document.createElement('button');
 
-let intViewportWidth, intViewportHeight, isPlaying, maxTime, pages, pageNumber, frame, maxFrames;
+let intViewportWidth, intViewportHeight, isPlaying, maxTime, pages, pageNumber, frame, maxFrames, unitSize;
 
 startupPage();
 
@@ -12,6 +12,7 @@ function startupPage() {
   initVariables();
   initLayout();
   initListeners();
+  draw();
 }
 
 function initVariables() {
@@ -26,15 +27,30 @@ function initVariables() {
   pages = [];
   pageNumber = 0;
   frame = 0;
-  maxFrames = 448;
+
+  unitSize = Math.trunc((intViewportHeight - 50) / 20);
 }
 
 function initLayout() {
-  for(i=0;i<8;i++) {
+  const navX = 8 * unitSize;
+  const navY = 20 * unitSize;
+  const thumbnailsX = intViewportWidth - (navX + unitSize);
+  const thumbnailsY = 20 * unitSize;
+
+  maxFrames =  Math.trunc(thumbnailsX / unitSize) * 20;
+  console.log(maxFrames)
+
+  videoNavigation.style = `height:${(navY)}px;width:${navX}px`;
+  thumbnails.style = `height:${(thumbnailsY)}px;width:${thumbnailsX}px`;
+  cursor.style = `height:${(unitSize)}px;width:${unitSize}px`;
+}
+
+function draw() {
+  for(i=0;i<10;i++) {
     const newDiv = document.createElement("div");
     newDiv.id = `navigation-frame-${i}`;
     newDiv.className = 'navigation-frame';
-    newDiv.style = `background: #${i}A${i}B${i}C`;
+    newDiv.style = `background: #${i}A${i}B${i}C;height:${4* unitSize}px;width:${4 * unitSize}px`;
     videoNavigation.appendChild(newDiv);
   }
 
@@ -123,12 +139,13 @@ function navigateToPage(index) {
 function refreshNavigationFrame() {
   const navigationFrame = document.getElementById(`navigation-frame-${pageNumber}`);
   const navigationFrameCanvas = document.createElement("canvas");
+  const canvasSize = 4 * unitSize;
 
-  navigationFrameCanvas.width = 200;
-  navigationFrameCanvas.height = 200;
+  navigationFrameCanvas.width = canvasSize;
+  navigationFrameCanvas.height = canvasSize;
 
   const navigationFrameContext = navigationFrameCanvas.getContext("2d");
-  navigationFrameContext.drawImage(video,80,0,480,480,0,0,200,200);
+  navigationFrameContext.drawImage(video,80,0,480,480,0,0,canvasSize,canvasSize);
 
   navigationFrameCanvas.className = "navigation-frame-canvas";
 
@@ -141,13 +158,15 @@ function refreshNavigationFrame() {
 /* Thumbnail canvas */
 function addThumbnail(currentTime) {
   const thumbnailCanvas = document.createElement("canvas");
+  const canvasSize = 4 * unitSize;
 
-  thumbnailCanvas.width = 200;
-  thumbnailCanvas.height = 200;
+  thumbnailCanvas.width = canvasSize;
+  thumbnailCanvas.height = canvasSize;
 
   const thumbnailContext = thumbnailCanvas.getContext("2d");
-  thumbnailContext.drawImage(video,80,0,480,480,0,0,200,200);
+  thumbnailContext.drawImage(video,80,0,480,480,0,0,canvasSize,canvasSize);
   thumbnailCanvas.className = "thumbnail";
+  thumbnailCanvas.style = `height:${unitSize}px;width:${unitSize}px;`;
 
   thumbnailCanvas.onclick = () => { 
     video.currentTime = currentTime;
