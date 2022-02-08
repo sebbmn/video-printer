@@ -1,19 +1,19 @@
-const video = document.getElementById('video');
+const video = document.createElement('video');
+const playPauseButton = document.createElement('button');
+
 const thumbnails = document.getElementById('thumbnails');
 const videoNavigation = document.getElementById('video-navigation');
 const cursor = document.getElementById('cursor');
-const playPauseButton = document.createElement('button');
 
 let intViewportWidth, intViewportHeight, isPlaying, maxTime, pages, pageNumber, frame, maxFrames, unitSize;
 
-startupPage();
-
-function startupPage() {
+document.addEventListener('DOMContentLoaded', () => {
+  initVideo();
   initVariables();
   initLayout();
   initListeners();
   draw();
-}
+});
 
 function initVariables() {
   playPauseButton.className = 'button';
@@ -31,6 +31,11 @@ function initVariables() {
   unitSize = Math.trunc((intViewportHeight - 50) / 20);
 }
 
+function initVideo() {
+  video.src = 'media/photosynthesis.mp4'; //https://ia903101.us.archive.org/15/items/photosynthesis_201911/photosynthesis.mp4
+  video.id = 'video';
+}
+
 function initLayout() {
   const navX = 8 * unitSize;
   const navY = 20 * unitSize;
@@ -38,7 +43,6 @@ function initLayout() {
   const thumbnailsY = 20 * unitSize;
 
   maxFrames =  Math.trunc(thumbnailsX / unitSize) * 20;
-  console.log(maxFrames)
 
   videoNavigation.style = `height:${(navY)}px;width:${navX}px`;
   thumbnails.style = `height:${(thumbnailsY)}px;width:${thumbnailsX}px`;
