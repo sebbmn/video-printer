@@ -1,7 +1,7 @@
 const video = document.createElement('video');
 const playPauseButton = document.createElement('button');
 
-const thumbnails = document.getElementById('thumbnails');
+const printedFrames = document.getElementById('printed-frames');
 const videoNavigation = document.getElementById('video-navigation');
 const cursor = document.getElementById('cursor');
 
@@ -39,13 +39,13 @@ function initVideo() {
 function initLayout() {
   const navX = 8 * unitSize;
   const navY = 20 * unitSize;
-  const thumbnailsX = intViewportWidth - (navX + unitSize);
-  const thumbnailsY = 20 * unitSize;
+  const printedFramesX = intViewportWidth - (navX + unitSize);
+  const printedFramesY = 20 * unitSize;
 
-  maxFrames =  Math.trunc(thumbnailsX / unitSize) * 20;
+  maxFrames =  Math.trunc(printedFramesX / unitSize) * 20;
 
   videoNavigation.style = `height:${(navY)}px;width:${navX}px`;
-  thumbnails.style = `height:${(thumbnailsY)}px;width:${thumbnailsX}px`;
+  printedFrames.style = `height:${(printedFramesY)}px;width:${printedFramesX}px`;
   cursor.style = `height:${(unitSize)}px;width:${unitSize}px`;
 }
 
@@ -96,7 +96,7 @@ window.setInterval(function() {
       }
       frame++;
       maxTime = video.currentTime;
-      addThumbnail(video.currentTime);
+      printFrame(video.currentTime);
       refreshNavigationFrame(pageNumber);
     }
   }
@@ -111,11 +111,11 @@ function newPage() {
   newNavFrame.removeChild(newNavFrame.firstChild);
   nextNavFrame.appendChild(playPauseButton);
 
-  while (thumbnails.firstChild) {
-    oldPageItems.push(thumbnails.firstChild);
-    thumbnails.removeChild(thumbnails.firstChild);
+  while (printedFrames.firstChild) {
+    oldPageItems.push(printedFrames.firstChild);
+    printedFrames.removeChild(printedFrames.firstChild);
   }
-  thumbnails.append(cursor);
+  printedFrames.append(cursor);
 
   const index = pageNumber;
   currentNavFrame.onclick = () => { 
@@ -130,12 +130,12 @@ function newPage() {
 function navigateToPage(index) {
   video.pause();
   frame = maxFrames;
-  while (thumbnails.firstChild) {
-    thumbnails.removeChild(thumbnails.firstChild);
+  while (printedFrames.firstChild) {
+    printedFrames.removeChild(printedFrames.firstChild);
   }
 
   pages[index].forEach(element => {
-    thumbnails.appendChild(element);
+    printedFrames.appendChild(element);
   });
 }
 
@@ -159,23 +159,23 @@ function refreshNavigationFrame() {
   navigationFrame.appendChild(navigationFrameCanvas);
 }
 
-/* Thumbnail canvas */
-function addThumbnail(currentTime) {
-  const thumbnailCanvas = document.createElement("canvas");
+/* */
+function printFrame(currentTime) {
+  const printedFrameCanvas = document.createElement("canvas");
   const canvasSize = 4 * unitSize;
 
-  thumbnailCanvas.width = canvasSize;
-  thumbnailCanvas.height = canvasSize;
+  printedFrameCanvas.width = canvasSize;
+  printedFrameCanvas.height = canvasSize;
 
-  const thumbnailContext = thumbnailCanvas.getContext("2d");
-  thumbnailContext.drawImage(video,80,0,480,480,0,0,canvasSize,canvasSize);
-  thumbnailCanvas.className = "thumbnail";
-  thumbnailCanvas.style = `height:${unitSize}px;width:${unitSize}px;`;
+  const printedFrameContext = printedFrameCanvas.getContext("2d");
+  printedFrameContext.drawImage(video,80,0,480,480,0,0,canvasSize,canvasSize);
+  printedFrameCanvas.className = "printed-frame";
+  printedFrameCanvas.style = `height:${unitSize}px;width:${unitSize}px;`;
 
-  thumbnailCanvas.onclick = () => { 
+  printedFrameCanvas.onclick = () => { 
     video.currentTime = currentTime;
     window.print();
   };
 
-  thumbnails.insertBefore(thumbnailCanvas, cursor);
+  printedFrames.insertBefore(printedFrameCanvas, cursor);
 }
