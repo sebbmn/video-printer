@@ -10,13 +10,70 @@ let intViewportWidth, intViewportHeight, isPlaying, maxTime, pages, pageNumber, 
 document.addEventListener('DOMContentLoaded', () => {
   initVideo();
   initVariables();
-  initLayout();
+  setElementsDimensions();
+  fillVideoNavigationHTML();
+  fillPlayPauseButtonHTML();
   initListeners();
-  draw();
 });
 
-function initVariables() {
+function getDimensions () {
+  intViewportWidth = window.innerWidth;
+  intViewportHeight = window.innerHeight;
+
+  const unitSizePx = Math.trunc((intViewportHeight - 50) / 20);
+  const contentHeight = 20 * unitSizePx;
+  const videoNavigationWidth = 8 * unitSizePx;
+  const printedFramesWidth = intViewportWidth - (videoNavigationWidth + unitSizePx);
+
+  const dimensions = {unitSizePx, contentHeight, videoNavigationWidth, printedFramesWidth};
+
+  return dimensions;
+}
+
+function initVideo() {
+  video.src = 'media/photosynthesis.mp4'; //https://ia903101.us.archive.org/15/items/photosynthesis_201911/photosynthesis.mp4
+  video.id = 'video';
+}
+
+function setElementsDimensions() {
+  const dimensions = getDimensions();
+
+  videoNavigation.style = `height:${(dimensions.contentHeight)}px;width:${dimensions.videoNavigationWidth}px`;
+  printedFrames.style = `height:${(dimensions.contentHeight)}px;width:${dimensions.printedFramesWidth}px`;
+  cursor.style = `height:${(dimensions.unitSizePx)}px;width:${dimensions.unitSizePx}px`;
+}
+
+function fillVideoNavigationHTML() {
+  const videoNavigation = document.getElementById('video-navigation');
+  const dimensions = getDimensions();
+  const size = 4 * dimensions.unitSizePx;
+
+  for(i=0;i<10;i++) {
+    const newDiv = document.createElement('div');
+    newDiv.id = `navigation-frame-${i}`;
+    newDiv.className = 'navigation-frame';
+    newDiv.style = `background: #${i}A${i}B${i}C;height:${size}px;width:${size}px`;//TODO: move to layout dimensions
+    videoNavigation.appendChild(newDiv);
+  }
+}
+
+function fillPlayPauseButtonHTML() {
   playPauseButton.className = 'button';
+  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber + 1}`);
+  navigationFrame.appendChild(playPauseButton);
+
+  playPauseButton.addEventListener('click', () => {
+    playPauseButton.classList.toggle('paused');
+
+    if(isPlaying) {
+      video.pause();
+    } else {
+      video.play();
+    }
+  });
+}
+
+function initVariables() {
 
   intViewportWidth = window.innerWidth;
   intViewportHeight = window.innerHeight;
@@ -31,36 +88,7 @@ function initVariables() {
   unitSize = Math.trunc((intViewportHeight - 50) / 20);
 }
 
-function initVideo() {
-  video.src = 'media/photosynthesis.mp4'; //https://ia903101.us.archive.org/15/items/photosynthesis_201911/photosynthesis.mp4
-  video.id = 'video';
-}
 
-function initLayout() {
-  const navX = 8 * unitSize;
-  const navY = 20 * unitSize;
-  const printedFramesX = intViewportWidth - (navX + unitSize);
-  const printedFramesY = 20 * unitSize;
-
-  maxFrames =  Math.trunc(printedFramesX / unitSize) * 20;
-
-  videoNavigation.style = `height:${(navY)}px;width:${navX}px`;
-  printedFrames.style = `height:${(printedFramesY)}px;width:${printedFramesX}px`;
-  cursor.style = `height:${(unitSize)}px;width:${unitSize}px`;
-}
-
-function draw() {
-  for(i=0;i<10;i++) {
-    const newDiv = document.createElement("div");
-    newDiv.id = `navigation-frame-${i}`;
-    newDiv.className = 'navigation-frame';
-    newDiv.style = `background: #${i}A${i}B${i}C;height:${4* unitSize}px;width:${4 * unitSize}px`;
-    videoNavigation.appendChild(newDiv);
-  }
-
-  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber + 1}`);
-  navigationFrame.appendChild(playPauseButton);
-}
 
 function initListeners() {
   window.addEventListener('resize', () => {
@@ -74,16 +102,6 @@ function initListeners() {
   
   video.addEventListener('pause', function() {
     isPlaying = false;
-  });
-
-  playPauseButton.addEventListener('click', () => {
-    playPauseButton.classList.toggle('paused');
-
-    if(isPlaying) {
-      video.pause();
-    } else {
-      video.play();
-    }
   });
 }
 
