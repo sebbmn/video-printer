@@ -7,6 +7,8 @@ const cursor = document.getElementById('cursor');
 let isPlaying = false;
 let isCurrentPage = true;
 let maxTime = 0;
+let maxLength = 35 * 60 * 1000; // 35mn max
+let interval = 0;
 
 let pages = [];
 let currentPage = [];
@@ -42,7 +44,7 @@ function getDimensions() {
 
   const unitSizePx = Math.trunc((intViewportHeight - 50) / 20);
   const contentHeight = 20 * unitSizePx;
-  const videoNavigationWidth = 8 * unitSizePx;
+  const videoNavigationWidth = 12 * unitSizePx;
   const printedFramesWidth = intViewportWidth - (videoNavigationWidth + unitSizePx);
 
   const dimensions = {unitSizePx, contentHeight, videoNavigationWidth, printedFramesWidth};
@@ -79,16 +81,17 @@ function setParameters() {
   const framesPerLine = Math.trunc(dimensions.printedFramesWidth / dimensions.unitSizePx);
 
   maxFrames = framesPerLine * 20;
+  interval = maxLength / (maxFrames * 14);
 }
 
 function fillVideoNavigationHTML() {
   const videoNavigation = document.getElementById('video-navigation');
 
-  for(i = 0;i < 10;i++) {
+  for(i = 0;i < 15;i++) {
     const newDiv = document.createElement('div');
     newDiv.id = `navigation-frame-${i}`;
     newDiv.className = 'navigation-frame';
-    newDiv.style.background = `#${i}A${i}B${i}C`;
+    newDiv.style.background = `rgb(${i * 15}, ${i * 15}, ${i * 15})`;
     videoNavigation.appendChild(newDiv);
   }
 
@@ -152,7 +155,7 @@ function initListeners() {
         refreshNavigationFrame(pageNumber);
       }
     }
-  }, 100); 
+  }, interval); 
 }
 
 function newPage() {
