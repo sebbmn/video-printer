@@ -41,13 +41,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 }
 
 
 .navigation-frame-canvas:hover {
-  transform: scale(1.5,1.5) translate(16.66%, 16.66%);
+  transform: scale(2,2) translate(25%, 25%);
   z-index: 10;
+  cursor: pointer;
 }
 
 /* Play/Pause button */

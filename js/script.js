@@ -5,6 +5,7 @@ const printedFrames = document.getElementById('printed-frames');
 const cursor = document.getElementById('cursor');
 
 let isPlaying = false;
+let isCurrentPage = true;
 let maxTime = 0;
 
 let pages = [];
@@ -112,7 +113,12 @@ function fillPlayPauseButtonHTML() {
     if(isPlaying) {
       video.pause();
     } else {
-      video.play();
+      if(isCurrentPage) {
+        video.play();
+      } else {
+        navigateToPage(pageNumber);
+        video.play();
+      }
     }
   });
 }
@@ -181,6 +187,9 @@ function navigateToPage(index) {
 
   if(index === pageNumber) {
     printedFrames.appendChild(cursor);
+    isCurrentPage = true;
+  } else {
+    isCurrentPage = false;
   }
 }
 
