@@ -108,19 +108,27 @@ function fillPlayPauseButtonHTML() {
   navigationFrame.appendChild(playPauseButton);
 
   playPauseButton.addEventListener('click', () => {
-    playPauseButton.classList.toggle('paused');
-
     if(isPlaying) {
-      video.pause();
+      pauseVideo(playPauseButton);
     } else {
-      if(isCurrentPage) {
-        video.play();
-      } else {
-        navigateToPage(pageNumber);
-        video.play();
-      }
+      playVideo(playPauseButton);
     }
   });
+}
+
+function playVideo(button) {
+  button.classList.add('paused');
+  if(isCurrentPage) {
+    video.play();
+  } else {
+    navigateToPage(pageNumber);
+    video.play();
+  }
+}
+
+function pauseVideo(button) {
+  video.pause();
+  button.classList.remove('paused');
 }
 
 function initListeners() {
@@ -172,7 +180,8 @@ function newPage() {
 }
 
 function navigateToPage(index) {
-  video.pause();
+  const playPauseButton = document.getElementById('play-pause-button');
+  pauseVideo(playPauseButton);
   const page = index === pageNumber ? currentPage : pages[index];
   frame = 0;
 
