@@ -1,4 +1,5 @@
 const video = document.createElement('video');
+const playPauseButton = document.createElement('button');
 
 const videoNavigation = document.getElementById('video-navigation');
 const printedFrames = document.getElementById('printed-frames');
@@ -103,7 +104,6 @@ function fillVideoNavigationHTML() {
 }
 
 function fillPlayPauseButtonHTML() {
-  const playPauseButton = document.createElement('button');
   const navigationFrame = document.getElementById(`navigation-frame-${pageNumber + 1}`);
 
   playPauseButton.className = 'button';
@@ -160,11 +160,18 @@ function initListeners() {
 }
 
 function newPage() {
-  const newNavFrame = document.getElementById(`navigation-frame-${pageNumber + 1}`);
-  const nextNavFrame = document.getElementById(`navigation-frame-${pageNumber + 2}`);
-  const playPauseButton = document.getElementById('play-pause-button');
+  const currentPageNumber = pageNumber % maxPages;
+  const newPageNumber = (pageNumber + 1) % maxPages;
+  const nextPageNumber = (pageNumber + 2) % maxPages;
+
+  const currentNavFrame = document.getElementById(`navigation-frame-${currentPageNumber}`);
+  const newNavFrame = document.getElementById(`navigation-frame-${newPageNumber}`);
+  const nextNavFrame = document.getElementById(`navigation-frame-${nextPageNumber}`);
 
   newNavFrame.removeChild(newNavFrame.firstChild);
+  while (nextNavFrame.firstChild) {
+    nextNavFrame.removeChild(nextNavFrame.firstChild);
+  }
   nextNavFrame.appendChild(playPauseButton);
 
   while (printedFrames.firstChild) {
@@ -173,9 +180,10 @@ function newPage() {
   printedFrames.append(cursor);
 
   const index = pageNumber;
-  newNavFrame.onclick = () => { 
-    navigateToPage(index + 1);
-  };
+
+  currentNavFrame.firstChild.addEventListener('click', () => { 
+    navigateToPage(index);
+  });
 
   pages = [...pages, currentPage];
   currentPage = [];
@@ -184,7 +192,6 @@ function newPage() {
 }
 
 function navigateToPage(index) {
-  const playPauseButton = document.getElementById('play-pause-button');
   pauseVideo(playPauseButton);
   const page = index === pageNumber ? currentPage : pages[index];
   frame = 0;
@@ -208,7 +215,7 @@ function navigateToPage(index) {
 
 /* Nav frame canvas */
 function refreshNavigationFrame() {
-  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber}`);
+  const navigationFrame = document.getElementById(`navigation-frame-${pageNumber % maxPages}`);
   const navigationFrameCanvas = document.createElement("canvas");
   const canvasSize = 4 * getDimensions().unitSizePx;
 
