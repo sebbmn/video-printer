@@ -15,6 +15,7 @@ let currentPage = [];
 let pageNumber = 0;
 let frame = 0;
 let maxFrames = 0;
+let maxPages = 10;
 
 document.addEventListener('DOMContentLoaded', () => {
   initVideo();
@@ -42,9 +43,9 @@ function getDimensions() {
   intViewportWidth = window.innerWidth;
   intViewportHeight = window.innerHeight;
 
-  const unitSizePx = Math.trunc((intViewportHeight - 50) / 20);
-  const contentHeight = 20 * unitSizePx;
-  const videoNavigationWidth = 12 * unitSizePx;
+  const unitSizePx = Math.trunc((intViewportHeight - 50) / (2 * maxPages));
+  const contentHeight = (2 * maxPages) * unitSizePx;
+  const videoNavigationWidth = 8 * unitSizePx;
   const printedFramesWidth = intViewportWidth - (videoNavigationWidth + unitSizePx);
 
   const dimensions = {unitSizePx, contentHeight, videoNavigationWidth, printedFramesWidth};
@@ -81,13 +82,13 @@ function setParameters() {
   const framesPerLine = Math.trunc(dimensions.printedFramesWidth / dimensions.unitSizePx);
 
   maxFrames = framesPerLine * 20;
-  interval = maxLength / (maxFrames * 14);
+  interval = 100 //maxLength / (maxFrames * 14);
 }
 
 function fillVideoNavigationHTML() {
   const videoNavigation = document.getElementById('video-navigation');
 
-  for(i = 0;i < 15;i++) {
+  for(i = 0;i < maxPages;i++) {
     const newDiv = document.createElement('div');
     newDiv.id = `navigation-frame-${i}`;
     newDiv.className = 'navigation-frame';
