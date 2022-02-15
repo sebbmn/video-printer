@@ -44,12 +44,15 @@ function getDimensions() {
   intViewportWidth = window.innerWidth;
   intViewportHeight = window.innerHeight;
 
-  const unitSizePx = Math.trunc((intViewportHeight - 50) / (2 * maxPages));
-  const contentHeight = (2 * maxPages) * unitSizePx;
-  const videoNavigationWidth = 8 * unitSizePx;
-  const printedFramesWidth = intViewportWidth - (videoNavigationWidth + unitSizePx);
+  const blockSizePx = Math.trunc((intViewportHeight - 40) / (2 * maxPages));
+  const videoNavigationBlocksX = 8;
+  const videoNavigationWidth = videoNavigationBlocksX * blockSizePx;
+  const printedFramesBlocksX = Math.trunc(((intViewportWidth - videoNavigationWidth) - 20) / blockSizePx );
+  const contentHeight = (2 * maxPages) * blockSizePx;
+  
+  const printedFramesWidth = printedFramesBlocksX * blockSizePx;
 
-  const dimensions = {unitSizePx, contentHeight, videoNavigationWidth, printedFramesWidth};
+  const dimensions = {blockSizePx, contentHeight, videoNavigationWidth, printedFramesWidth};
 
   return dimensions;
 }
@@ -61,26 +64,26 @@ function setElementsDimensions() {
 
   videoNavigation.style = `height:${dimensions.contentHeight}px;width:${dimensions.videoNavigationWidth}px`;
   printedFrames.style = `height:${dimensions.contentHeight}px;width:${dimensions.printedFramesWidth}px`;
-  cursor.style = `height:${dimensions.unitSizePx}px;width:${dimensions.unitSizePx}px`;
+  cursor.style = `height:${dimensions.blockSizePx}px;width:${dimensions.blockSizePx}px`;
 
   for (const key in navigationFrameList) {
     if(navigationFrameList[key] && navigationFrameList[key].style) {
-      navigationFrameList[key].style.height = `${4 * dimensions.unitSizePx}px`;
-      navigationFrameList[key].style.width = `${4 * dimensions.unitSizePx}px`;
+      navigationFrameList[key].style.height = `${4 * dimensions.blockSizePx}px`;
+      navigationFrameList[key].style.width = `${4 * dimensions.blockSizePx}px`;
     } 
   }
 
   for (const key in printedFrameList) {
     if(printedFrameList[key] && printedFrameList[key].style) {
-      printedFrameList[key].style.height = `${dimensions.unitSizePx}px`;
-      printedFrameList[key].style.width = `${dimensions.unitSizePx}px`;
+      printedFrameList[key].style.height = `${dimensions.blockSizePx}px`;
+      printedFrameList[key].style.width = `${dimensions.blockSizePx}px`;
     } 
   }
 }
 
 function setParameters() {
   const dimensions = getDimensions()
-  const framesPerLine = Math.trunc(dimensions.printedFramesWidth / dimensions.unitSizePx);
+  const framesPerLine = Math.trunc(dimensions.printedFramesWidth / dimensions.blockSizePx);
 
   maxFrames = framesPerLine * 20;
   interval = 100 //maxLength / (maxFrames * 14);
@@ -217,7 +220,7 @@ function navigateToPage(index) {
 function refreshNavigationFrame() {
   const navigationFrame = document.getElementById(`navigation-frame-${pageNumber % maxPages}`);
   const navigationFrameCanvas = document.createElement("canvas");
-  const canvasSize = 4 * getDimensions().unitSizePx;
+  const canvasSize = 4 * getDimensions().blockSizePx;
 
   navigationFrameCanvas.width = canvasSize;
   navigationFrameCanvas.height = canvasSize;
@@ -236,7 +239,7 @@ function refreshNavigationFrame() {
 /* */
 function printFrame(currentTime) {
   const printedFrameCanvas = document.createElement("canvas");
-  const size = getDimensions().unitSizePx;
+  const size = getDimensions().blockSizePx;
   const canvasSize = 4 * size;
 
   printedFrameCanvas.width = canvasSize;
