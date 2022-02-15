@@ -251,7 +251,6 @@ function printFrame(currentTime) {
   printedFrameCanvas.style = `height:${size}px;width:${size}px;`;
 
   printedFrameCanvas.onclick = () => { 
-    video.currentTime = currentTime;
     window.print();
   };
 

@@ -15,6 +15,14 @@ body {
   justify-content: center;
 }
 
+/*.notice {
+  font-family: 'Courier New', Courier, monospace;
+  position: fixed;
+  width: 25%;
+  top: 50%;
+  left: 70%;
+}*/
+
 #video-navigation {
   display:flex;
   flex-wrap: wrap;
