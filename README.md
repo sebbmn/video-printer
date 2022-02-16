@@ -3,6 +3,8 @@
 * Print video frames on screen
 * Only use standard JS/HTML/CSS | no dependencies
 
+![image info](./images/video-printer.png)
+
 ## Install
 
 Clone this repo.
