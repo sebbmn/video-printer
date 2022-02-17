@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initVideo() {
-  video.src = 'media/photosynthesis.mp4'; //https://ia903101.us.archive.org/15/items/photosynthesis_201911/photosynthesis.mp4
+  video.src = 'https://ia903101.us.archive.org/15/items/photosynthesis_201911/photosynthesis.mp4'; //media/photosynthesis.mp4
   video.id = 'video';
 
   video.addEventListener('play', function() {
