@@ -3,11 +3,13 @@ body {
   margin: 0;
   padding: 0;
 }
+
 /*@media (prefers-color-scheme: dark) {
   body {
     background-color: black;
   }
 }*/
+
 #maincontent {
   height: 100vh;
   display:flex;
@@ -36,14 +38,6 @@ body {
   align-content: flex-start;
 }
 
-#video {
-  visibility: hidden;
-  width: 0;
-  height: 0;
-  margin: 0;
-  padding: 0;
-}
-
 /* Video navigation */
 .navigation-frame {
   display: flex;
@@ -53,7 +47,6 @@ body {
 
 
 .navigation-frame-canvas:hover {
-  /*transform: scale(2,2) translate(25%, 25%);*/
   z-index: 10;
   cursor: pointer;
 }
@@ -85,8 +78,6 @@ button:hover {
 
 /* printed frames */
 .printed-frame {
-  width: 50px;
-  height: 50px;
   animation: 0.5s printedFrameEnter 1 linear; 
 }
 
