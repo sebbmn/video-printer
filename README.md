@@ -20,4 +20,4 @@ Clone this repo.
 * ... Or just open the index.html in a browser :fox_face:
 
 ## Demo
-...
+https://sebbmn.github.io/video-printer/
