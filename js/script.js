@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initVideo();
   fillVideoNavigationHTML();
   fillPlayPauseButtonHTML();
-  setElementsDimensions();
+  setHTMLElementsDimensions();
   initListeners();
 });
 
@@ -36,7 +36,7 @@ function initVideo() {
 
 function initListeners() {
   window.addEventListener('resize', () => {
-    setElementsDimensions();
+    setHTMLElementsDimensions();
   });
   
   // 23fps = 1 frame every 43.478 sec
@@ -48,39 +48,54 @@ function initListeners() {
         printedFrames.removeChild(printedFrames.firstChild);
       }
       frame++;
-      printFrame(video.currentTime);
+      printFrame();
+    }
+  }, getParameters().interval);
+
+  // Frame navigation monitor
+  window.setInterval(function() {
+    if(isPlaying) {
       refreshNavigationFrame(currentPageNumber);
     }
-  }, getParameters().interval); 
+  }, getParameters().interval * 1.5);
+
 }
 
 function getParameters() {
-  const maxPages = 10;
+  const maxPages = 10;  // Display up to 10 pages on the left navigation
+  const interval = 100; // A frame every 100 milisecond
+  const margin = 40; // Height total margin in px
 
-  const blockSizePx = Math.trunc((window.innerHeight - 40) / (2 * maxPages));
-  const videoNavigationBlocksX = 8;
-  const videoNavigationWidth = videoNavigationBlocksX * blockSizePx;
-  const printedFramesBlocksX = Math.trunc(((window.innerWidth - videoNavigationWidth) - 20) / blockSizePx );
+  const blockSizePx = Math.trunc((window.innerHeight - margin) / (2 * maxPages));
+
+  const videoNavigationWidthBlks = 8;
+  const videoNavigationWidthPx = videoNavigationWidthBlks * blockSizePx;
+
+  const printedFramesWidthBlks = Math.trunc(((window.innerWidth - videoNavigationWidthPx) - 20) / blockSizePx );
+  const printedFramesWidthPx = printedFramesWidthBlks * blockSizePx;
+
   const contentHeight = (2 * maxPages) * blockSizePx;
-  
-  const printedFramesWidth = printedFramesBlocksX * blockSizePx;
-  const framesPerLine = Math.trunc(printedFramesWidth / blockSizePx);
-
+  const framesPerLine = Math.trunc(printedFramesWidthPx / blockSizePx);
   const maxFrames = framesPerLine * 20;
-  const interval = 100;
 
-  const parameters = {blockSizePx, contentHeight, videoNavigationWidth, printedFramesWidth, maxFrames, interval, maxPages};
-
-  return parameters;
+  return {
+    blockSizePx,
+    contentHeight,
+    videoNavigationWidthPx,
+    printedFramesWidthPx,
+    maxFrames,
+    interval,
+    maxPages
+  };
 }
 
-function setElementsDimensions() {
+function setHTMLElementsDimensions() {
   const dimensions = getParameters();
   const navigationFrameList = document.getElementsByClassName('navigation-frame');
   const printedFrameList = document.getElementsByClassName('printed-frame');
 
-  videoNavigation.style = `height:${dimensions.contentHeight}px;width:${dimensions.videoNavigationWidth}px`;
-  printedFrames.style = `height:${dimensions.contentHeight}px;width:${dimensions.printedFramesWidth}px`;
+  videoNavigation.style = `height:${dimensions.contentHeight}px;width:${dimensions.videoNavigationWidthPx}px`;
+  printedFrames.style = `height:${dimensions.contentHeight}px;width:${dimensions.printedFramesWidthPx}px`;
   cursor.style = `height:${dimensions.blockSizePx}px;width:${dimensions.blockSizePx}px`;
 
   for (const key in navigationFrameList) {
@@ -111,6 +126,7 @@ function fillVideoNavigationHTML() {
   }
 
   const firstNavFrame = document.getElementById(`navigation-frame-0`);
+
   firstNavFrame.onclick = () => { 
     navigateToPage(0);
   };
@@ -128,15 +144,15 @@ function fillPlayPauseButtonHTML() {
   let navigationFrame;
 
   if(document.getElementById('play-pause-button')) {
-    navigationFrame = document.getElementById(`navigation-frame-${(currentPageNumber + 1) % getParameters().maxPages}`);
+    navigationFrame = nextNavFrame;
     playPauseButton = document.getElementById('play-pause-button');
+    playPauseButton.classList.add('paused');
   } else {
     navigationFrame = document.getElementById(`navigation-frame-1`);
     playPauseButton = document.createElement('button');
+    playPauseButton.className = 'button';
+    playPauseButton.id = 'play-pause-button';
   }
-
-  playPauseButton.className = 'button';
-  playPauseButton.id = 'play-pause-button';
   
   navigationFrame.appendChild(playPauseButton);
 
@@ -168,7 +184,6 @@ function pauseVideo() {
 }
 
 function newPage() {
-  pauseVideo();
   const currentIndex = currentPageNumber % getParameters().maxPages;
   const currentNavFrame = document.getElementById(`navigation-frame-${currentIndex}`);
 
@@ -177,7 +192,7 @@ function newPage() {
   }
   printedFrames.append(cursor);
 
-  const index = currentIndex;
+  const index = currentPageNumber;
 
   currentNavFrame.firstChild.addEventListener('click', () => { 
     navigateToPage(index);
@@ -189,7 +204,6 @@ function newPage() {
   currentPageNumber++;
 
   fillPlayPauseButtonHTML();
-  playVideo();
 }
 
 function navigateToPage(index) {
@@ -214,7 +228,7 @@ function navigateToPage(index) {
   }
 }
 
-/* Nav frame canvas */
+/* Refresh the navigation active frame */
 function refreshNavigationFrame() {
   const navigationFrame = document.getElementById(`navigation-frame-${currentPageNumber % getParameters().maxPages}`);
   const navigationFrameCanvas = document.createElement("canvas");
@@ -234,8 +248,8 @@ function refreshNavigationFrame() {
   navigationFrame.appendChild(navigationFrameCanvas);
 }
 
-/* */
-function printFrame(currentTime) {
+/* Print a frame on the right */
+function printFrame() {
   const printedFrameCanvas = document.createElement("canvas");
   const size = getParameters().blockSizePx;
   const canvasSize = 4 * size;
