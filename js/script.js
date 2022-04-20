@@ -264,7 +264,7 @@ function printFrame() {
   printedFrameCanvas.style = `height:${size}px;width:${size}px;`;
 
   printedFrameCanvas.onclick = () => { 
-    window.print();
+    // window.print();
   };
 
   printedFrames.insertBefore(printedFrameCanvas, cursor);

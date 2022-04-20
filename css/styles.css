@@ -84,7 +84,6 @@ button:hover {
 .printed-frame:hover {
   transform: scale(4,4);
   box-shadow: 10px 10px 91px 0px #222222;
-  cursor:pointer;
 }
 
 /* Blinking cursor */
