@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initVideo() {
   video.src = 'https://ia903101.us.archive.org/15/items/photosynthesis_201911/photosynthesis.mp4'; //media/photosynthesis.mp4
   video.id = 'video';
+  video.setAttribute('playsinline','')
 
   video.addEventListener('play', function() {
     isPlaying = true;
