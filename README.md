@@ -9,7 +9,7 @@
 - :page_facing_up: Print video frames on screen
 - :star2: Only standard JS/HTML/CSS
 - :100: 100% dependencies free
-- :skull: Obviously useless
+- :skull: Obviously useless (as it is)
 
 ## Getting started
 1. Clone this repo
