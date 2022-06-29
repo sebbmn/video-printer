@@ -6,6 +6,7 @@ const cursor = document.getElementById('cursor');
 
 /** Variables */
 let isPlaying = false;
+let isReady = false;
 let isCurrentPage = true;
 let currentPage = [];
 let pages = [];
@@ -25,6 +26,12 @@ function initVideo() {
   video.src = 'https://ia903101.us.archive.org/15/items/photosynthesis_201911/photosynthesis.mp4'; //media/photosynthesis.mp4
   video.id = 'video';
   video.setAttribute('playsinline','')
+
+  video.onloadeddata = () => {
+    if(video.readyState >= 2) {
+      isReady = true;
+    }
+  };
 
   video.addEventListener('play', function() {
     isPlaying = true;
@@ -158,10 +165,12 @@ function fillPlayPauseButtonHTML() {
   navigationFrame.appendChild(playPauseButton);
 
   playPauseButton.addEventListener('click', () => {
-    if(isPlaying) {
-      pauseVideo();
-    } else {
-      playVideo();
+    if (isReady) {
+      if(isPlaying) {
+        pauseVideo();
+      } else {
+        playVideo();
+      }
     }
   });
 }
